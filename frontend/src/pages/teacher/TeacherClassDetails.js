@@ -55,9 +55,17 @@ const TeacherClassDetails = () => {
         };
 
         const handleAttendance = () => {
+            if (!subjectID) {
+                alert("No subject assigned to you. Please contact admin.");
+                return;
+            }
             navigate(`/Teacher/class/student/attendance/${row.id}/${subjectID}`)
         }
         const handleMarks = () => {
+            if (!subjectID) {
+                alert("No subject assigned to you. Please contact admin.");
+                return;
+            }
             navigate(`/Teacher/class/student/marks/${row.id}/${subjectID}`)
         };
 

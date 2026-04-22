@@ -63,6 +63,21 @@ const StudentAttendance = ({ situation }) => {
 
     const submitHandler = (event) => {
         event.preventDefault()
+        if (!chosenSubName) {
+            setMessage("Please select a subject");
+            setShowPopup(true);
+            return;
+        }
+        if (!status) {
+            setMessage("Please select attendance status");
+            setShowPopup(true);
+            return;
+        }
+        if (!date) {
+            setMessage("Please select a date");
+            setShowPopup(true);
+            return;
+        }
         setLoader(true)
         dispatch(updateStudentFields(studentID, fields, "StudentAttendance"))
     }
@@ -125,12 +140,12 @@ const StudentAttendance = ({ situation }) => {
                                     {
                                         situation === "Student" &&
                                         <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Select Subject</InputLabel>
+                                            <InputLabel id="select-subject-label">Select Subject</InputLabel>
                                             <Select
-                                                labelId="demo-simple-select-label"
-                                                id="demo-simple-select"
+                                                labelId="select-subject-label"
+                                                id="select-subject"
                                                 value={subjectName}
-                                                label="Choose an option"
+                                                label="Select Subject"
                                                 onChange={changeHandler} required
                                             >
                                                 {subjectsList ?
@@ -148,12 +163,12 @@ const StudentAttendance = ({ situation }) => {
                                         </FormControl>
                                     }
                                     <FormControl fullWidth>
-                                        <InputLabel id="demo-simple-select-label">Attendance Status</InputLabel>
+                                        <InputLabel id="attendance-status-label">Attendance Status</InputLabel>
                                         <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
+                                            labelId="attendance-status-label"
+                                            id="attendance-status"
                                             value={status}
-                                            label="Choose an option"
+                                            label="Attendance Status"
                                             onChange={(event) => setStatus(event.target.value)}
                                             required
                                         >
@@ -161,14 +176,23 @@ const StudentAttendance = ({ situation }) => {
                                             <MenuItem value="Absent">Absent</MenuItem>
                                         </Select>
                                     </FormControl>
-                                    <FormControl>
+                                    <FormControl fullWidth>
                                         <TextField
                                             label="Select Date"
                                             type="date"
                                             value={date}
-                                            onChange={(event) => setDate(event.target.value)} required
+                                            onChange={(event) => setDate(event.target.value)}
+                                            required
+                                            fullWidth
                                             InputLabelProps={{
                                                 shrink: true,
+                                            }}
+                                            sx={{
+                                                '& input[type="date"]::-webkit-calendar-picker-indicator': {
+                                                    filter: (theme) =>
+                                                        theme.palette.mode === 'dark' ? 'invert(1)' : 'none',
+                                                    cursor: 'pointer',
+                                                },
                                             }}
                                         />
                                     </FormControl>

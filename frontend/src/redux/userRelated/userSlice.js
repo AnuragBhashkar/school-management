@@ -9,7 +9,7 @@ const initialState = {
     currentRole: (JSON.parse(localStorage.getItem('user')) || {}).role || null,
     error: null,
     response: null,
-    darkMode: true
+    darkMode: JSON.parse(localStorage.getItem('darkMode')) ?? false
 };
 
 const userSlice = createSlice({
@@ -79,6 +79,7 @@ const userSlice = createSlice({
         },
         toggleDarkMode: (state) => {
             state.darkMode = !state.darkMode;
+            localStorage.setItem('darkMode', JSON.stringify(state.darkMode));
         }
     },
 });

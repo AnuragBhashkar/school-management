@@ -17,7 +17,7 @@ const LoginPage = ({ role }) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const { status, currentUser, response, error, currentRole } = useSelector(state => state.user);;
+    const { status, currentUser, response, error, currentRole } = useSelector(state => state.user);
 
     const [toggle, setToggle] = useState(false)
     const [guestLoader, setGuestLoader] = useState(false)
@@ -218,9 +218,21 @@ const LoginPage = ({ role }) => {
                                     control={<Checkbox value="remember" color="primary" />}
                                     label="Remember me"
                                 />
-                                <StyledLink href="#">
+                                <button
+                                    type="button"
+                                    style={{
+                                        marginTop: '9px',
+                                        textDecoration: 'none',
+                                        color: '#7f56da',
+                                        background: 'none',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        padding: 0,
+                                        font: 'inherit',
+                                    }}
+                                >
                                     Forgot password?
-                                </StyledLink>
+                                </button>
                             </Grid>
                             <LightPurpleButton
                                 type="submit"

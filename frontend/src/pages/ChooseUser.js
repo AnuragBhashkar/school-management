@@ -19,7 +19,7 @@ const ChooseUser = ({ visitor }) => {
   const navigate = useNavigate()
   const password = "zxc"
 
-  const { status, currentUser, currentRole } = useSelector(state => state.user);;
+  const { status, currentUser, currentRole } = useSelector(state => state.user);
 
   const [loader, setLoader] = useState(false)
   const [showPopup, setShowPopup] = useState(false);

@@ -95,7 +95,7 @@ const deleteSubject = async (req, res) => {
         // Set the teachSubject field to null in teachers
         await Teacher.updateOne(
             { teachSubject: deletedSubject._id },
-            { $unset: { teachSubject: "" }, $unset: { teachSubject: null } }
+            { $unset: { teachSubject: "" } }
         );
 
         // Remove the objects containing the deleted subject from students' examResult array
@@ -118,12 +118,15 @@ const deleteSubject = async (req, res) => {
 
 const deleteSubjects = async (req, res) => {
     try {
+        const subjectsToDelete = await Subject.find({ school: req.params.id });
+        const subjectIds = subjectsToDelete.map(subject => subject._id);
+
         const deletedSubjects = await Subject.deleteMany({ school: req.params.id });
 
         // Set the teachSubject field to null in teachers
         await Teacher.updateMany(
-            { teachSubject: { $in: deletedSubjects.map(subject => subject._id) } },
-            { $unset: { teachSubject: "" }, $unset: { teachSubject: null } }
+            { teachSubject: { $in: subjectIds } },
+            { $unset: { teachSubject: "" } }
         );
 
         // Set examResult and attendance to null in all students
@@ -140,12 +143,15 @@ const deleteSubjects = async (req, res) => {
 
 const deleteSubjectsByClass = async (req, res) => {
     try {
+        const subjectsToDelete = await Subject.find({ sclassName: req.params.id });
+        const subjectIds = subjectsToDelete.map(subject => subject._id);
+
         const deletedSubjects = await Subject.deleteMany({ sclassName: req.params.id });
 
         // Set the teachSubject field to null in teachers
         await Teacher.updateMany(
-            { teachSubject: { $in: deletedSubjects.map(subject => subject._id) } },
-            { $unset: { teachSubject: "" }, $unset: { teachSubject: null } }
+            { teachSubject: { $in: subjectIds } },
+            { $unset: { teachSubject: "" } }
         );
 
         // Set examResult and attendance to null in all students

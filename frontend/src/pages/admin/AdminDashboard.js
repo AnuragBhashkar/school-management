@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
     CssBaseline,
     Box,
@@ -7,10 +7,17 @@ import {
     Typography,
     Divider,
     IconButton,
+    Tooltip,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleDarkMode } from '../../redux/userRelated/userSlice';
+import { getDesignTheme } from '../../components/theme';
 import { AppBar, Drawer } from '../../components/styles';
 import Logout from '../Logout';
 import SideBar from './SideBar';
@@ -44,15 +51,20 @@ import AccountMenu from '../../components/AccountMenu';
 
 const AdminDashboard = () => {
     const [open, setOpen] = useState(false);
+    const dispatch = useDispatch();
+    const { darkMode } = useSelector(state => state.user);
+
     const toggleDrawer = () => {
         setOpen(!open);
     };
 
+    const theme = useMemo(() => getDesignTheme(darkMode), [darkMode]);
+
     return (
-        <>
+        <ThemeProvider theme={theme}>
             <Box sx={{ display: 'flex' }}>
                 <CssBaseline />
-                <AppBar open={open} position='absolute'>
+                <AppBar open={open} position='absolute' elevation={0}>
                     <Toolbar sx={{ pr: '24px' }}>
                         <IconButton
                             edge="start"
@@ -75,6 +87,11 @@ const AdminDashboard = () => {
                         >
                             Admin Dashboard
                         </Typography>
+                        <Tooltip title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}>
+                            <IconButton color="inherit" onClick={() => dispatch(toggleDarkMode())} sx={{ mr: 1 }}>
+                                {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+                            </IconButton>
+                        </Tooltip>
                         <AccountMenu />
                     </Toolbar>
                 </AppBar>
@@ -138,7 +155,7 @@ const AdminDashboard = () => {
                     </Routes>
                 </Box>
             </Box>
-        </>
+        </ThemeProvider>
     );
 }
 
@@ -146,10 +163,7 @@ export default AdminDashboard
 
 const styles = {
     boxStyled: {
-        backgroundColor: (theme) =>
-            theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
+        backgroundColor: 'background.default',
         flexGrow: 1,
         height: '100vh',
         overflow: 'auto',

@@ -106,8 +106,8 @@ const deleteTeacher = async (req, res) => {
         const deletedTeacher = await Teacher.findByIdAndDelete(req.params.id);
 
         await Subject.updateOne(
-            { teacher: deletedTeacher._id, teacher: { $exists: true } },
-            { $unset: { teacher: 1 } }
+            { teacher: deletedTeacher._id },
+            { $unset: { teacher: "" } }
         );
 
         res.send(deletedTeacher);
@@ -118,6 +118,8 @@ const deleteTeacher = async (req, res) => {
 
 const deleteTeachers = async (req, res) => {
     try {
+        const deletedTeachers = await Teacher.find({ school: req.params.id });
+
         const deletionResult = await Teacher.deleteMany({ school: req.params.id });
 
         const deletedCount = deletionResult.deletedCount || 0;
@@ -127,11 +129,9 @@ const deleteTeachers = async (req, res) => {
             return;
         }
 
-        const deletedTeachers = await Teacher.find({ school: req.params.id });
-
         await Subject.updateMany(
-            { teacher: { $in: deletedTeachers.map(teacher => teacher._id) }, teacher: { $exists: true } },
-            { $unset: { teacher: "" }, $unset: { teacher: null } }
+            { teacher: { $in: deletedTeachers.map(teacher => teacher._id) } },
+            { $unset: { teacher: "" } }
         );
 
         res.send(deletionResult);
@@ -142,6 +142,8 @@ const deleteTeachers = async (req, res) => {
 
 const deleteTeachersByClass = async (req, res) => {
     try {
+        const deletedTeachers = await Teacher.find({ sclassName: req.params.id });
+
         const deletionResult = await Teacher.deleteMany({ sclassName: req.params.id });
 
         const deletedCount = deletionResult.deletedCount || 0;
@@ -151,11 +153,9 @@ const deleteTeachersByClass = async (req, res) => {
             return;
         }
 
-        const deletedTeachers = await Teacher.find({ sclassName: req.params.id });
-
         await Subject.updateMany(
-            { teacher: { $in: deletedTeachers.map(teacher => teacher._id) }, teacher: { $exists: true } },
-            { $unset: { teacher: "" }, $unset: { teacher: null } }
+            { teacher: { $in: deletedTeachers.map(teacher => teacher._id) } },
+            { $unset: { teacher: "" } }
         );
 
         res.send(deletionResult);
