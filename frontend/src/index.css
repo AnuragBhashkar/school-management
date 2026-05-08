@@ -60,20 +60,36 @@ a {
   flex-direction: column;
 }
 
-.registerForm>label {
+.registerForm > label {
   margin: 10px 0;
-  color: rgb(0, 0, 0);
+  font-weight: 500;
+  color: inherit;  /* inherits from MUI body — dark in light mode, light in dark mode */
 }
 
 .registerInput {
-  padding: 10px;
-  background-color: white;
-  border: none;
+  padding: 10px 14px;
+  background-color: transparent;
+  border: 1.5px solid rgba(128, 128, 128, 0.35);
   border-radius: 10px;
+  color: inherit;          /* inherits page text color */
+  font-size: 15px;
+  font-family: 'Poppins', sans-serif;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+
+.registerInput::placeholder {
+  color: rgba(128, 128, 128, 0.7);
+}
+
+.registerInput option {
+  background-color: #1a1a3e;
+  color: white;
 }
 
 .registerInput:focus {
   outline: none;
+  border-color: #6C63FF;
 }
 
 .registerButton {
