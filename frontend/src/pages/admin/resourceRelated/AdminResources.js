@@ -118,8 +118,16 @@ const AdminResources = () => {
         return url.replace('/upload/', '/upload/fl_attachment/');
     };
 
-    // Open file directly — Cloudinary raw URLs have correct Content-Type for PDFs
-    const getPreviewUrl = (url) => url;
+    // For PDFs: use backend proxy (/ResourceView/:id) which sets Content-Type: application/pdf
+    // For images: open Cloudinary URL directly (works fine)
+    const getPreviewUrl = (resource) => {
+        const BACKEND = process.env.REACT_APP_BASE_URL || 'http://localhost:5000';
+        const pdfTypes = ['pdf'];
+        if (pdfTypes.includes(resource.fileType?.toLowerCase())) {
+            return `${BACKEND}/ResourceView/${resource._id}`;
+        }
+        return resource.fileUrl; // images work directly
+    };
 
     const formatDate = (dateStr) =>
         new Date(dateStr).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -276,7 +284,7 @@ const AdminResources = () => {
                                         <Tooltip title="View / Preview">
                                             <IconButton
                                                 component="a"
-                                                href={getPreviewUrl(r.fileUrl, r.fileType)}
+                                                href={getPreviewUrl(r)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 color="primary"

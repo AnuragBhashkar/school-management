@@ -11,23 +11,27 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
     cloudinary,
     params: async (req, file) => {
-        // CRITICAL: Strip extension from public_id.
-        // With resource_type 'auto', Cloudinary auto-detects the format and appends
-        // the correct extension to the URL automatically.
-        // If we include the extension in public_id, the URL becomes file.pdf.pdf (broken).
+        const isImage = file.mimetype.startsWith('image/');
+        const isPdf   = file.mimetype === 'application/pdf';
+
+        // Strip extension — Cloudinary appends it automatically based on resource_type
         const nameWithoutExt = file.originalname
             .replace(/\s+/g, '_')
-            .replace(/[^a-zA-Z0-9._-]/g, '')   // sanitize
-            .replace(/\.[^/.]+$/, '');           // strip .extension
+            .replace(/[^a-zA-Z0-9._-]/g, '')
+            .replace(/\.[^/.]+$/, '');
+
+        // Images + PDFs  → resource_type 'image'
+        //   Cloudinary image pipeline serves these with correct Content-Type
+        //   (image/png, image/jpeg, application/pdf) → Chrome renders inline ✅
+        //
+        // Docs (DOC, PPT, XLS) → resource_type 'raw'
+        //   These can't be rendered in a browser anyway — user downloads them ✅
+        const resourceType = (isImage || isPdf) ? 'image' : 'raw';
 
         return {
             folder: 'school_resources',
-            // 'auto': PDFs → stored as image type → URL /image/upload/...file.pdf
-            //         served with Content-Type: application/pdf → Chrome renders inline ✓
-            //         'raw' serves as application/octet-stream → Chrome fails to render ✗
-            resource_type: 'auto',
+            resource_type: resourceType,
             public_id: `${Date.now()}-${nameWithoutExt}`,
-            // Do NOT set 'format' — causes double extension (.pdf.pdf)
         };
     },
 });

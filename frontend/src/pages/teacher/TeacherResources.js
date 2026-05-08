@@ -115,7 +115,13 @@ const TeacherResources = () => {
         return url.replace('/upload/', '/upload/fl_attachment/');
     };
 
-    const getPreviewUrl = (url) => url;
+    const getPreviewUrl = (resource) => {
+        const BACKEND = process.env.REACT_APP_BASE_URL || 'http://localhost:5000';
+        if (resource.fileType?.toLowerCase() === 'pdf') {
+            return `${BACKEND}/ResourceView/${resource._id}`;
+        }
+        return resource.fileUrl;
+    };
 
     const formatDate = (dateStr) =>
         new Date(dateStr).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -269,7 +275,7 @@ const TeacherResources = () => {
                                         <Tooltip title="View / Preview">
                                             <IconButton
                                                 component="a"
-                                                href={getPreviewUrl(r.fileUrl, r.fileType)}
+                                                href={getPreviewUrl(r)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 color="primary"

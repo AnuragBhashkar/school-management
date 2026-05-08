@@ -1,5 +1,7 @@
 const Resource = require('../models/resourceSchema');
 const { cloudinary } = require('../cloudinaryConfig');
+const https = require('https');
+const http = require('http');
 
 // Upload a new resource (Admin or Teacher)
 const uploadResource = async (req, res) => {
@@ -137,10 +139,90 @@ const deleteResource = async (req, res) => {
     }
 };
 
+// Proxy resource — uses Cloudinary SDK to generate authenticated URL, bypassing 401
+const proxyResource = async (req, res) => {
+    try {
+        const resource = await Resource.findById(req.params.id);
+        if (!resource) return res.status(404).json({ message: 'Resource not found' });
+
+        const contentTypeMap = {
+            'pdf':  'application/pdf',
+            'png':  'image/png',
+            'jpg':  'image/jpeg',
+            'jpeg': 'image/jpeg',
+            'gif':  'image/gif',
+            'doc':  'application/msword',
+            'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'ppt':  'application/vnd.ms-powerpoint',
+            'pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'xls':  'application/vnd.ms-excel',
+            'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        };
+
+        const fileType = (resource.fileType || resource.fileUrl.split('.').pop()).toLowerCase();
+        const contentType = contentTypeMap[fileType] || 'application/pdf';
+
+        // Determine resource_type from the stored URL
+        const resourceType = resource.fileUrl.includes('/image/upload/') ? 'image' : 'raw';
+
+        // Strip extension from publicId — cloudinary.utils expects no extension
+        const cleanPublicId = resource.publicId.replace(/\.[^/.]+$/, '');
+
+        // Generate an authenticated signed URL using our API credentials
+        // This bypasses any CDN 401 / access restrictions
+        const signedUrl = cloudinary.utils.private_download_url(
+            cleanPublicId,
+            fileType,
+            { resource_type: resourceType, type: 'upload' }
+        );
+
+        console.log(`[Proxy] fileType=${fileType} resourceType=${resourceType} publicId=${cleanPublicId}`);
+
+        // Fetch the file into a buffer (following redirects)
+        const fetchBuffer = (url) => new Promise((resolve, reject) => {
+            const fetcher = url.startsWith('https') ? https : http;
+            fetcher.get(url, (stream) => {
+                if ([301, 302, 307, 308].includes(stream.statusCode) && stream.headers.location) {
+                    stream.resume();
+                    return resolve(fetchBuffer(stream.headers.location));
+                }
+                if (stream.statusCode !== 200) {
+                    stream.resume();
+                    return reject(new Error(`Download failed: status ${stream.statusCode}`));
+                }
+                const chunks = [];
+                stream.on('data', (c) => chunks.push(c));
+                stream.on('end', () => resolve(Buffer.concat(chunks)));
+                stream.on('error', reject);
+            }).on('error', reject);
+        });
+
+        const buffer = await fetchBuffer(signedUrl);
+
+        // Send response with explicit Content-Type (never overridden)
+        res.writeHead(200, {
+            'Content-Type': contentType,
+            'Content-Length': buffer.length,
+            'Content-Disposition': `inline; filename="${resource.fileName || resource.title}"`,
+            'Cache-Control': 'public, max-age=3600',
+        });
+        res.end(buffer);
+
+    } catch (error) {
+        console.error('[Proxy] Error:', error.message);
+        if (!res.headersSent) {
+            res.status(500).json({ message: error.message });
+        }
+    }
+};
+
+
+
 module.exports = {
     uploadResource,
     getResourcesBySchool,
     getResourcesByClass,
     getResourcesByTeacher,
-    deleteResource
+    deleteResource,
+    proxyResource,
 };

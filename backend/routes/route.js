@@ -25,7 +25,7 @@ const {
     removeStudentAttendance } = require('../controllers/student_controller.js');
 const { subjectCreate, classSubjects, deleteSubjectsByClass, getSubjectDetail, deleteSubject, freeSubjectList, allSubjects, deleteSubjects } = require('../controllers/subject-controller.js');
 const { teacherRegister, teacherLogIn, getTeachers, getTeacherDetail, deleteTeachers, deleteTeachersByClass, deleteTeacher, updateTeacherSubject, teacherAttendance } = require('../controllers/teacher-controller.js');
-const { uploadResource, getResourcesBySchool, getResourcesByClass, getResourcesByTeacher, deleteResource } = require('../controllers/resource-controller.js');
+const { uploadResource, getResourcesBySchool, getResourcesByClass, getResourcesByTeacher, deleteResource, proxyResource } = require('../controllers/resource-controller.js');
 
 // Admin
 router.post('/AdminReg', adminRegister);
@@ -124,5 +124,6 @@ router.get('/ResourceList/:id', getResourcesBySchool);
 router.get('/ResourceListByClass/:schoolId/:classId', getResourcesByClass);
 router.get('/ResourceListByTeacher/:id', getResourcesByTeacher);
 router.delete('/Resource/:id', deleteResource);
+router.get('/ResourceView/:id', proxyResource);  // Proxy: streams file with correct Content-Type
 
-module.exports = router;
+module.exports = router;
