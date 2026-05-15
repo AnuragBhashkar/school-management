@@ -201,16 +201,23 @@ Browser (React + Redux)
 
 ## Screenshots
 
-> _Add screenshots of the following pages for a complete showcase:_
+### Landing / Homepage
+![Homepage](docs/screenshots/homepage.png)
 
-| Page | Screenshot |
-|---|---|
-| Landing / Homepage | `docs/screenshots/homepage.png` |
-| Admin Dashboard | `docs/screenshots/admin-dashboard.png` |
-| Teacher Dashboard | `docs/screenshots/teacher-dashboard.png` |
-| Student Dashboard | `docs/screenshots/student-dashboard.png` |
-| Resource Library | `docs/screenshots/resources.png` |
-| Attendance View | `docs/screenshots/attendance.png` |
+### Admin Dashboard
+![Admin Dashboard](docs/screenshots/admin-dashboard.png)
+
+### Teacher Dashboard
+![Teacher Dashboard](docs/screenshots/teacher-dashboard.png)
+
+### Student Dashboard
+![Student Dashboard](docs/screenshots/student-dashboard.png)
+
+### Resource Library
+![Resource Library](docs/screenshots/resources.png)
+
+### Attendance View
+![Attendance View](docs/screenshots/attendance.png)
 
 ---
 
