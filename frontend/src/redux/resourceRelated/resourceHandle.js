@@ -8,7 +8,7 @@ import {
     deleteSuccess,
 } from './resourceSlice';
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 // Get all resources for a school (Admin)
 export const getAllResources = (schoolId) => async (dispatch) => {
