@@ -40,7 +40,7 @@ const ShowStudents = () => {
     }
 
     const [showPopup, setShowPopup] = React.useState(false);
-    const [message, setMessage] = React.useState("");
+    const [message] = React.useState("");
 
     const deleteHandler = (deleteID, address) => {
         if (window.confirm('Are you sure you want to delete this? This action cannot be undone.')) {

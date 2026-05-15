@@ -53,6 +53,7 @@ const AdminResources = () => {
     // Prevents ghost snackbar appearing on page load from a previous session's upload
     useEffect(() => {
         dispatch(clearResponse());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -77,7 +78,7 @@ const AdminResources = () => {
             setUploading(false);
             dispatch(clearResponse());
         }
-    }, [response, error]);
+    }, [response, error]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files[0]) {
