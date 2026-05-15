@@ -25,7 +25,7 @@ const AdminRegisterPage = () => {
     const [toggle, setToggle] = useState(false)
     const [loader, setLoader] = useState(false)
     const [showPopup, setShowPopup] = useState(false);
-    const [message] = useState("");
+    const [message, setMessage] = useState("");
 
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
