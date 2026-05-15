@@ -7,6 +7,7 @@ import {
     IconButton, Tooltip
 } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import ImageIcon from '@mui/icons-material/Image';
@@ -45,6 +46,22 @@ const StudentResources = () => {
         day: '2-digit', month: 'short', year: 'numeric'
     });
 
+    // For PDFs: route through backend proxy so Content-Type is set correctly (inline rendering)
+    // For images: open Cloudinary URL directly
+    const getPreviewUrl = (resource) => {
+        const BACKEND = process.env.REACT_APP_BASE_URL || 'http://localhost:5000';
+        if (resource.fileType?.toLowerCase() === 'pdf') {
+            return `${BACKEND}/ResourceView/${resource._id}`;
+        }
+        return resource.fileUrl;
+    };
+
+    // Force browser download via Cloudinary fl_attachment transformation
+    const getDownloadUrl = (url) => {
+        if (!url) return url;
+        return url.replace('/upload/', '/upload/fl_attachment/');
+    };
+
     return (
         <Box sx={{ p: 3 }}>
             <Box sx={{ mb: 3 }}>
@@ -76,7 +93,7 @@ const StudentResources = () => {
                                 <TableCell sx={{ color: 'white', fontWeight: 600 }}>Type</TableCell>
                                 <TableCell sx={{ color: 'white', fontWeight: 600 }}>Shared By</TableCell>
                                 <TableCell sx={{ color: 'white', fontWeight: 600 }}>Date</TableCell>
-                                <TableCell sx={{ color: 'white', fontWeight: 600 }} align="center">Download</TableCell>
+                                <TableCell sx={{ color: 'white', fontWeight: 600 }} align="center">Actions</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -107,13 +124,25 @@ const StudentResources = () => {
                                     </TableCell>
                                     <TableCell>{formatDate(r.createdAt)}</TableCell>
                                     <TableCell align="center">
-                                        <Tooltip title="Open / Download">
+                                        <Tooltip title="View / Preview">
                                             <IconButton
                                                 component="a"
-                                                href={r.fileUrl}
+                                                href={getPreviewUrl(r)}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 color="primary"
+                                                size="small"
+                                            >
+                                                <VisibilityIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title="Download">
+                                            <IconButton
+                                                component="a"
+                                                href={getDownloadUrl(r.fileUrl)}
+                                                download
+                                                rel="noopener noreferrer"
+                                                color="success"
                                                 size="small"
                                             >
                                                 <DownloadIcon />
