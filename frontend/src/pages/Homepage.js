@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleDarkMode } from '../redux/userRelated/userSlice';
-import { Container, Grid, Box, Button, IconButton, Tooltip } from '@mui/material';
+import { Container, Grid, IconButton, Tooltip } from '@mui/material';
 import {
     School,
     Groups,
@@ -11,7 +11,7 @@ import {
     Brightness4 as Brightness4Icon,
     Brightness7 as Brightness7Icon,
 } from '@mui/icons-material';
-import styled, { keyframes, css } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Students from "../assets/students.svg";
 
 const Homepage = () => {
