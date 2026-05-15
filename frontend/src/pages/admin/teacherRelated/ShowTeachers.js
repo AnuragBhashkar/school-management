@@ -28,7 +28,7 @@ const ShowTeachers = () => {
     }, [currentUser._id, dispatch]);
 
     const [showPopup, setShowPopup] = useState(false);
-    const [message, setMessage] = useState("");
+    const [message] = useState("");
 
     if (loading) {
         return <div>Loading...</div>;

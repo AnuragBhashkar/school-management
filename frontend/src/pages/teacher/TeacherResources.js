@@ -51,6 +51,7 @@ const TeacherResources = () => {
 
     useEffect(() => {
         dispatch(clearResponse());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -74,6 +75,7 @@ const TeacherResources = () => {
             setUploading(false);
             dispatch(clearResponse());
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [response, error]);
 
     const handleFileChange = (e) => {
