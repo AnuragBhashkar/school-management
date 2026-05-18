@@ -7,9 +7,13 @@
 ![Redux](https://img.shields.io/badge/Redux_Toolkit-1.9-764ABC?logo=redux&logoColor=white)
 ![MUI](https://img.shields.io/badge/MUI-v5-007FFF?logo=mui&logoColor=white)
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-File_Storage-3448C5?logo=cloudinary&logoColor=white)
+![Vercel](https://img.shields.io/badge/Frontend-Vercel-000000?logo=vercel&logoColor=white)
+![Render](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render&logoColor=black)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 A full-stack **School Management System** built with the MERN stack that centralizes administration, teaching, and student workflows into three dedicated role-based portals. Admins manage the school-wide setup, teachers handle class-level operations, and students access their academic data — all from a single unified platform.
+
+🔗 **Live Demo:** [https://school-management-rose-seven.vercel.app](https://school-management-rose-seven.vercel.app)
 
 ---
 
@@ -72,6 +76,8 @@ Traditional schools rely on scattered tools — spreadsheets for attendance, ema
 | Service | Purpose |
 |---|---|
 | Cloudinary | File hosting for PDFs, images, and documents |
+| Vercel | Frontend hosting & CI/CD |
+| Render | Backend API hosting |
 
 ---
 
@@ -232,7 +238,7 @@ Browser (React + Redux)
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/<your-username>/school-management.git
+git clone https://github.com/AnuragBhashkar/school-management.git
 cd school-management
 ```
 
@@ -246,7 +252,8 @@ npm install
 Create a `.env` file in the `backend/` directory (see [Environment Variables](#environment-variables) below), then start the server:
 
 ```bash
-npm start        # production (nodemon)
+npm run dev      # development (nodemon, auto-restart)
+npm start        # production (node index.js)
 ```
 
 The API server runs on **http://localhost:5000** by default.
@@ -294,12 +301,58 @@ The optimized build is output to `frontend/build/`.
 | `CLOUDINARY_CLOUD_NAME` | ✅ | Cloudinary account cloud name | `my-cloud` |
 | `CLOUDINARY_API_KEY` | ✅ | Cloudinary API key | `123456789012345` |
 | `CLOUDINARY_API_SECRET` | ✅ | Cloudinary API secret | `abcdefghijklmnop` |
+| `FRONTEND_URL` | ✅ | Allowed CORS origin (your Vercel URL) | `https://school-management-rose-seven.vercel.app` |
 
 ### Frontend (`frontend/.env`)
 
 | Variable | Required | Description | Example |
 |---|---|---|---|
-| `REACT_APP_BASE_URL` | ✅ | Backend API base URL | `http://localhost:5000` |
+| `REACT_APP_BASE_URL` | ✅ | Backend API base URL | `https://your-backend.onrender.com` |
+
+> ⚠️ Never commit `.env` files. Both are listed in `.gitignore`. Use the provided `.env.example` files as templates.
+
+---
+
+## Deployment
+
+This project is deployed with a split-hosting architecture:
+
+| Layer | Platform | Notes |
+|---|---|---|
+| Frontend | [Vercel](https://vercel.com) | Auto-deploys on every `git push` to `main` |
+| Backend | [Render](https://render.com) | Node.js web service, free tier |
+| Database | [MongoDB Atlas](https://www.mongodb.com/atlas) | M0 free cluster |
+| File Storage | [Cloudinary](https://cloudinary.com) | Free tier (25 GB storage) |
+
+### Deploy the Backend (Render)
+
+1. Go to [render.com](https://render.com) → **New Web Service** → connect your GitHub repo
+2. Set the **Root Directory** to `backend`
+3. Set **Build Command**: `npm install`
+4. Set **Start Command**: `npm start`
+5. Add the following **Environment Variables** in Render's dashboard:
+
+```
+MONGO_URL=<your MongoDB Atlas URI>
+CLOUDINARY_CLOUD_NAME=<your cloud name>
+CLOUDINARY_API_KEY=<your API key>
+CLOUDINARY_API_SECRET=<your API secret>
+FRONTEND_URL=https://school-management-rose-seven.vercel.app
+PORT=5000
+```
+
+### Deploy the Frontend (Vercel)
+
+1. Go to [vercel.com](https://vercel.com) → **New Project** → import your GitHub repo
+2. Set **Root Directory** to `frontend`
+3. Set **Framework Preset** to `Create React App`
+4. Add the following **Environment Variable** in Vercel's dashboard:
+
+```
+REACT_APP_BASE_URL=https://your-backend.onrender.com
+```
+
+5. Click **Deploy** — Vercel will auto-build and publish on every push to `main`
 
 ---
 
@@ -558,7 +611,7 @@ This project is licensed under the **MIT License**.
 ```
 MIT License
 
-Copyright (c) 2024
+Copyright (c) 2025 Anurag Bhashkar
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
