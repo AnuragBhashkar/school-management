@@ -1,4 +1,4 @@
-# 🏫 School Management System
+# 🏫 SchoolSync- School Management System
 
 ![Node.js](https://img.shields.io/badge/Node.js-18.x-339933?logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-4.x-000000?logo=express&logoColor=white)
